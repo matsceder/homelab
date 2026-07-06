@@ -1,0 +1,76 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: homepage-config
+data:
+  settings.yaml: ""
+  bookmarks.yaml: "[]"
+  services.yaml: "[]"
+  widgets.yaml: "[]"
+  kubernetes.yaml: ""
+  docker.yaml: ""
+  custom.css: ""
+  custom.js: ""
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: homepage
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: homepage
+  template:
+    metadata:
+      labels:
+        app: homepage
+    spec:
+      containers:
+        - name: homepage
+          image: ghcr.io/gethomepage/homepage:latest
+          ports:
+            - containerPort: 3000
+          env:
+            - name: HOMEPAGE_ALLOWED_HOSTS
+              value: "homepage.test,homepage.test:30080"
+          volumeMounts:
+            - name: config
+              mountPath: /app/config
+            - name: logs
+              mountPath: /app/config/logs
+      volumes:
+        - name: config
+          configMap:
+            name: homepage-config
+        - name: logs
+          emptyDir: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: homepage
+spec:
+  selector:
+    app: homepage
+  ports:
+    - port: 3000
+      targetPort: 3000
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: homepage
+spec:
+  ingressClassName: traefik
+  rules:
+    - host: homepage.test
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: homepage
+                port:
+                  number: 3000
