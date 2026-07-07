@@ -36,7 +36,7 @@ metadata:
 spec:
   ingressClassName: traefik
   rules:
-    - host: omnitools.test
+    - host: omnitools.meceder.com
       http:
         paths:
           - path: /
