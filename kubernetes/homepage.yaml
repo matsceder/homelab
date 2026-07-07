@@ -33,7 +33,7 @@ spec:
             - containerPort: 3000
           env:
             - name: HOMEPAGE_ALLOWED_HOSTS
-              value: "homepage.test,homepage.test:30080"
+              value: "homepage.meceder.com"
           volumeMounts:
             - name: config
               mountPath: /app/config
@@ -64,7 +64,7 @@ metadata:
 spec:
   ingressClassName: traefik
   rules:
-    - host: homepage.test
+    - host: homepage.meceder.com
       http:
         paths:
           - path: /
