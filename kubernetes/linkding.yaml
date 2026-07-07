@@ -27,6 +27,9 @@ spec:
       containers:
         - name: linkding
           image: sissbruecker/linkding:latest
+          env:
+            - name: LD_CSRF_TRUSTED_ORIGINS
+              value: "https://linkding.meceder.com"
           ports:
             - containerPort: 9090
           volumeMounts:
