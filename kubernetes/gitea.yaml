@@ -141,7 +141,7 @@ metadata:
 spec:
   ingressClassName: traefik
   rules:
-    - host: gitea.test
+    - host: gitea.meceder.com
       http:
         paths:
           - path: /
